@@ -3,7 +3,7 @@ package config
 import "os"
 
 var (
-	Environment = getEnviron()
+	Environment = getEnvironment()
 	DbHost      = getDatabaseHost()
 	DbPort      = getDatabasePort()
 	DbUser      = getDatabaseUser()
@@ -13,71 +13,41 @@ var (
 	SecretKey   = getSecretKey()
 )
 
-func getEnviron() string {
-	env := os.Getenv("ENV")
-	if env == "" {
-		env = "DEV"
+func getEnvVar(variable, defaultValue string) string {
+	if envVar, ok := os.LookupEnv(variable); ok {
+		return envVar
 	}
-	return env
+	return defaultValue
+}
+
+func getEnvironment() string {
+	return getEnvVar("ENV", "DEV")
 }
 
 func getDatabaseHost() string {
-	host := os.Getenv("DATABASE_HOST")
-	if host == "" {
-		host = "localhost"
-	}
-	return host
+	return getEnvVar("DATABASE_HOST", "localhost")
 }
 
 func getDatabasePort() string {
-	port := os.Getenv("DATABASE_HOST")
-	if port == "" {
-		port = "5432"
-	}
-	return port
+	return getEnvVar("DATABASE_PORT", "5432")
 }
 
 func getDatabaseName() string {
-
-	name := os.Getenv("DATABASE_NAME")
-	if name == "" {
-		name = ""
-	}
-	return name
+	return getEnvVar("DATABASE_NAME", "tasktracker")
 }
 
 func getDatabaseUser() string {
-
-	user := os.Getenv("DATABASE_USER")
-	if user == "" {
-		user = "postgres"
-	}
-	return user
+	return getEnvVar("DATABASE_USER", "postgres")
 }
 
 func getDatabasePassword() string {
-
-	password := os.Getenv("DATABASE_PASSWORD")
-	if password == "" {
-		password = "postgres"
-	}
-	return password
+	return getEnvVar("DATABASE_PASSWORD", "postgres")
 }
 
 func getIdentityKey() string {
-
-	identityKey := os.Getenv("IDENTITY_KEY")
-	if identityKey == "" {
-		identityKey = "id"
-	}
-	return identityKey
+	return getEnvVar("IDENTITY_KEY", "id")
 }
 
 func getSecretKey() string {
-
-	secretKey := os.Getenv("SECRET_KEY")
-	if secretKey == "" {
-		secretKey = "my_secret_key_3219kd"
-	}
-	return secretKey
+	return getEnvVar("SECRET_KEY", "my_secret_key_3219kd")
 }
