@@ -5,8 +5,8 @@ import (
 
 	jwtapple2 "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
-	"github.com/isnakolah/task-tracker-backend/config"
-	"github.com/isnakolah/task-tracker-backend/model"
+	"github.com/isnakolah/task-tracker-backend/account"
+	"github.com/isnakolah/task-tracker-backend/utils/config"
 )
 
 func SetupAuth() (*jwtapple2.GinJWTMiddleware, error) {
@@ -31,7 +31,7 @@ func SetupAuth() (*jwtapple2.GinJWTMiddleware, error) {
 }
 
 func payload(data interface{}) jwtapple2.MapClaims {
-	if v, ok := data.(*model.User); ok {
+	if v, ok := data.(*account.User); ok {
 		return jwtapple2.MapClaims{
 			config.IdentityKey: v.ID,
 		}
@@ -42,19 +42,19 @@ func payload(data interface{}) jwtapple2.MapClaims {
 
 func identityHandler(c *gin.Context) interface{} {
 	claims := jwtapple2.ExtractClaims(c)
-	var user model.User
+	var user account.User
 	config.GetDB().Where("id = ?", claims[config.IdentityKey]).First(&user)
 
 	return user
 }
 
 func authenticator(c *gin.Context) (interface{}, error) {
-	var loginVals model.User
+	var loginVals account.User
 	if err := c.ShouldBind(&loginVals); err != nil {
 		return "", jwtapple2.ErrMissingLoginValues
 	}
 
-	var result model.User
+	var result account.User
 	config.GetDB().Where("email = ? AND password = ?",
 		loginVals.Email, loginVals.Password).First(&result)
 
@@ -66,7 +66,7 @@ func authenticator(c *gin.Context) (interface{}, error) {
 }
 
 func authorizator(data interface{}, c *gin.Context) bool {
-	if v, ok := data.(model.User); ok && v.ID != 0 {
+	if v, ok := data.(account.User); ok && v.ID != 0 {
 		return true
 	}
 
