@@ -7,7 +7,7 @@ var (
 	DbHost      = getDatabaseHost()
 	DbPort      = getDatabasePort()
 	DbUser      = getDatabaseUser()
-	DbName      = getDatabaseUser()
+	DbName      = getDatabaseName()
 	DbPassword  = getDatabasePassword()
 	IdentityKey = getIdentityKey()
 	SecretKey   = getSecretKey()
