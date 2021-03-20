@@ -11,16 +11,9 @@ var DB *gorm.DB
 
 func Init() *gorm.DB {
 
-	// Get database details from environment details
-	host := GetDatabaseHost()
-	port := GetDatabasePort()
-	user := GetDatabaseUser()
-	name := GetDatabaseUser()
-	password := GetDatabasePassword()
-
 	connectionString := fmt.Sprintf(
 		"postgresql: //$%s:$%s@$%s:$%s/$%s?sslmode=disable",
-		user, password, host, port, name,
+		DbUser, DbPassword, DbHost, DbPort, DbName,
 	)
 
 	db, err := gorm.Open("postgres", connectionString)
